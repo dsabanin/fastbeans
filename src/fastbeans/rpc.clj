@@ -22,12 +22,12 @@
   [f args]
   (str f " " (clojure.string/join " " (map str args))))
 
-(defn dispatch [[[f-str & args :as whole]]]
+(defn dispatch [[[signature [f-str & args :as whole]]]]
   (try
     (if-let [f (cached-auto-resolve f-str)]
       (benchmark f-str
-                 ; (info "Call:" (prn-call f args))
-                 (apply f args))
+                 (info "Call" signature "-" (prn-call f args))
+                 [signature (apply f args)])
       (die :failed-to-resolve f-str))
     (catch clojure.lang.ArityException e
       (print-exception e)
