@@ -8,6 +8,7 @@
                  [aleph "0.3.0-beta16" :exclusions [io.netty/netty]]
                  [clj-msgpack "0.2.0"]
                  [io.netty/netty "3.6.3.Final"]
-                 [slingshot "0.10.3"]]
                  [simplelog "1.0.13"]
+                 [slingshot "0.10.3"]
+                 [org.apache.commons/commons-io "1.3.2"]]
   :aot [fastbeans.handlers])
