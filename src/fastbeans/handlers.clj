@@ -6,7 +6,6 @@
    fastbeans.utils
    simplelog.use)
   (:import
-   [java.net InetSocketAddress]
    [org.jboss.netty.channel Channels Channel SimpleChannelHandler ExceptionEvent
     MessageEvent ChannelStateEvent]
    [org.jboss.netty.buffer ChannelBuffers ChannelBuffer]
