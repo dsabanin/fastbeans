@@ -1,8 +1,8 @@
 (ns fastbeans.msgpack
-  (:require 
+  (:require
     [clj-msgpack.core :as mp]
     [clojure.java.io :as io])
-  (:import 
+  (:import
     [org.msgpack MessagePack]
     [org.msgpack.packer Packer]))
 
@@ -25,7 +25,11 @@
   clojure.lang.Keyword
   (pack-me [kw ^Packer packer]
     (.write packer ^String (name kw)))
-  
+
   java.io.ByteArrayOutputStream
   (pack-me [baos ^Packer packer]
-    (.write packer ^String (.toString baos))))
+    (.write packer ^String (.toString baos)))
+
+  java.util.Date
+  (pack-me [date ^Packer packer]
+    (.write packer ^Number (/ (.getTime date) 1000))))
