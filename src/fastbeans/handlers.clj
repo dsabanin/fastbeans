@@ -68,17 +68,21 @@
       (when (message-finished? message)
         (finish-message c message)))))
 
+(defn write-death-frame
+  [channel throwable]
+  (let [death-frame (rpc/die :failed-with-network-exception (str throwable))]
+    (write-to-channel channel (encode-frame death-frame))
+    (.close channel)))
+
 (defn -exceptionCaught
   [this ctx ^ExceptionEvent e]
   (let [throwable (.getCause e)
         channel (.getChannel e)]
     (error "Exception caught:" throwable)
     (print-exception throwable)
-    (when-not (= (.getClass throwable) ClosedChannelException)
-      (let [death-frame (rpc/die :failed-with-network-exception
-                                 (str throwable))]
-        (write-to-channel channel (encode-frame death-frame))
-        (.close channel)))))
+    (cond
+     (= (.getClass throwable) java.io.IOException) (.close channel)
+     (not= (.getClass throwable) ClosedChannelException) (write-death-frame channel throwable))))
 
 (defn -channelClosed
   [this ctx ^ChannelStateEvent e]
