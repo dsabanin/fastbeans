@@ -12,6 +12,11 @@
 
 (def cached-auto-resolve (memoize auto-resolve))
 
+(defn error?
+  [res]
+  (and (map? res)
+       (contains? res :fastbeans-error)))
+
 (defn die
   [error-id & args]
   (apply error (str "[" error-id "]") args)
@@ -27,7 +32,10 @@
     (if-let [f (cached-auto-resolve f-str)]
       (benchmark f-str
                  (info "Call" signature "-" (prn-call f args))
-                 [signature (apply f args)])
+                 (let [res (apply f args)]
+                   (if (error? res)
+                     res
+                     [signature res])))
       (die :failed-to-resolve f-str))
     (catch clojure.lang.ArityException e
       (print-exception e)
