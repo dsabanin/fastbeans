@@ -17,7 +17,7 @@
   (AdaptiveReceiveBufferSizePredictorFactory. min avg max))
 
 (defn start
-  "Start the RPC server. Returns the pipeline."
+  "Start the RPC server. Returns Netty pipeline."
   [port]
   (let [bootstrap (ServerBootstrap. (channel-factory))
         pipeline (.getPipeline bootstrap)
