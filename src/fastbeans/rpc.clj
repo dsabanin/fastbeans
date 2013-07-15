@@ -6,10 +6,9 @@
 (defn auto-resolve
   "Resolves qualified symbol and tries to require namespace if missing."
   [f-str]
-  (let [sym (symbol f-str)]
-    (if-let [f-ns (-> sym namespace symbol)]
-      (require f-ns))
-    (resolve sym)))
+  (let [f-sym (symbol f-str)]
+    (some-> f-sym namespace symbol require)
+    (resolve f-sym)))
 
 (def cached-auto-resolve (memoize auto-resolve))
 
