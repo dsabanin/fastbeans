@@ -18,15 +18,3 @@
            (error "Failed on background call" ~(str *ns* "/" f-str))
            (print-exception e#))))
      :bg:spawned))
-
-(defn join-paths
-  [& paths]
-  (reduce #(.getPath (File. %1 %2)) paths))
-
-(defn file-exists?
-  [path]
-  (.exists (io/as-file path)))
-
-(defn touch
-  [path]
-  (FileUtils/touch (io/as-file path)))
