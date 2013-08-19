@@ -1,10 +1,5 @@
 (ns fastbeans.utils
-  (:use simplelog.use)
-  (:require
-    [clojure.java.io :as io])
-  (:import
-   [java.io File]
-   [org.apache.commons.io FileUtils]))
+  (:use simplelog.use))
 
 (defmacro dofuture
   [f-str & body]
