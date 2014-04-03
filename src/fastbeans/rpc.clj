@@ -3,6 +3,8 @@
    fastbeans.utils
    simplelog.use))
 
+(def print-call-filters (atom #{}))
+
 (defn auto-resolve
   "Resolves qualified symbol and tries to require namespace if missing."
   [f-str]
@@ -18,17 +20,35 @@
   (and (map? res)
        (contains? res :fastbeans-error)))
 
+(defn print-filter-pred
+  [x]
+  (some (fn [f] (try
+                 (f x)
+                 (catch Exception e
+                   false))) @print-call-filters))
+
+(defn print-filter
+  [arg]
+  (if (coll? arg)
+    (->> arg
+         (filter (complement print-filter-pred))
+         (into (empty arg)))
+    (when-not (print-filter-pred arg)
+      arg)))
+
 (defn die
   "Construct a death reply for client to know the error information."
   [error-id & args]
   (apply error (str "[" error-id "]") args)
   {:fastbeans-error error-id
-   :error-information args})
+   :error-information (print-filter args)})
 
 (defn prn-call
   "Print call information."
   [f args]
-  (str f " " (clojure.string/join " " (map str args))))
+  (str f " " (clojure.string/join " " (->> args
+                                           (map print-filter)
+                                           (map str)))))
 
 (defn dispatch
   "Dispatch incoming deserialized call and return the signature and result."
