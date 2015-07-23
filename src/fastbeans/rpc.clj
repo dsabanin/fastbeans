@@ -65,6 +65,9 @@
 (defn stack-trace-str [e]
   (clojure.string/join "\n" (map str (.getStackTrace e))))
 
+(defn format-exc [e]
+  (str (.getName (class e)) ": " (.getMessage e)))
+
 (defn dispatch
   "Dispatch incoming deserialized call and return the signature and result."
   [[[signature [f-str & args :as whole]]]]
@@ -81,11 +84,11 @@
       (print-exception e)
       (notify-bugsnag e f-str args signature)
       (die :wrong-arguments-exception {:call (prn-call f-str (print-filter args))
-                                       :message (.getMessage e)
+                                       :message (format-exc e)
                                        :backtrace (stack-trace-str e)}))
     (catch Exception e
       (print-exception e)
       (notify-bugsnag e f-str args signature)
       (die :failed-with-exception {:call (prn-call f-str (print-filter args))
-                                   :message (.getMessage e)
+                                   :message (format-exc e)
                                    :backtrace (stack-trace-str e)}))))
