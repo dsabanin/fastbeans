@@ -2,7 +2,8 @@
   (:use fastbeans.utils
         simplelog.use)
   (:require tiny-bugsnag.core
-            [clj-stacktrace.repl :as stack]))
+            [clj-stacktrace.repl :as stack])
+  (:import [org.apache.commons.lang3.exception ExceptionUtils]))
 
 (def print-call-filters (atom #{}))
 
@@ -63,10 +64,16 @@
                                                       {"Signature" signature})}))
 
 (defn stack-trace-str [e]
-  (clojure.string/join "\n" (map str (.getStackTrace e))))
+  (clojure.string/join "\n"
+                       (map str (concat (if-let [root (ExceptionUtils/getRootCause e)]
+                                          (.getStackTrace (ExceptionUtils/getRootCause e))
+                                          [])
+                                        (.getStackTrace e)))))
 
 (defn format-exc [e]
-  (str (.getName (class e)) ": " (.getMessage e)))
+  (clojure.string/trim (str (.getName (class e)) ": " (.getMessage e) "\n\n"
+                            (when-let [root (ExceptionUtils/getRootCause e)]
+                              (str "Cause " (.getName (class root)) ": " (.getMessage root))))))
 
 (defn dispatch
   "Dispatch incoming deserialized call and return the signature and result."
