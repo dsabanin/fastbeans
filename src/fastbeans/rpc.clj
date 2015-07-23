@@ -42,17 +42,17 @@
 
 (defn die
   "Construct a death reply for client to know the error information."
-  [error-id & args]
+  [error-id args]
   (apply error (str "[" error-id "]") args)
   {:fastbeans-error error-id
-   :error-information (print-filter args)})
+   :error-information args})
 
 (defn prn-call
   "Print call information."
   [f args]
-  (str f " " (clojure.string/join " " (->> args
+  (str "(" f " " (clojure.string/join " " (->> args
                                            (map print-filter)
-                                           (map str)))))
+                                           (map str))) ")"))
 
 (defn notify-bugsnag [exc f-str args signature]
   (tiny-bugsnag.core/notify :context (str "RPC call (" f-str ")")
@@ -61,6 +61,9 @@
                                                         args
                                                         {"Vector" (prn-str args)})
                                                       {"Signature" signature})}))
+
+(defn stack-trace-str [e]
+  (clojure.string/join "\n" (map str (.getStackTrace e))))
 
 (defn dispatch
   "Dispatch incoming deserialized call and return the signature and result."
@@ -77,10 +80,12 @@
     (catch clojure.lang.ArityException e
       (print-exception e)
       (notify-bugsnag e f-str args signature)
-      (die :wrong-arguments-exception (prn-call f-str args)))
+      (die :wrong-arguments-exception {:call (prn-call f-str (print-filter args))
+                                       :message (.getMessage e)
+                                       :backtrace (stack-trace-str e)}))
     (catch Exception e
       (print-exception e)
       (notify-bugsnag e f-str args signature)
-      (die :failed-with-exception {:call (prn-call f-str args)
+      (die :failed-with-exception {:call (prn-call f-str (print-filter args))
                                    :message (.getMessage e)
-                                   :backtrace (clojure.string/join "\n" (map str (.getStackTrace e)))}))))
+                                   :backtrace (stack-trace-str e)}))))
