@@ -77,4 +77,7 @@
       (die :wrong-arguments-exception (prn-call f-str args)))
     (catch Exception e
       (print-exception e)
-      (die :failed-with-exception (prn-call f-str args)))))
+      (notify-bugsnag e f-str args signature)
+      (die :failed-with-exception {:call (prn-call f-str args)
+                                   :message (.getMessage e)
+                                   :backtrace (clojure.string/join "\n" (map str (.getStackTrace e)))}))))
