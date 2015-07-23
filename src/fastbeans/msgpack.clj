@@ -32,4 +32,4 @@
 
   java.util.Date
   (pack-me [date ^Packer packer]
-    (.write packer ^Number (/ (.getTime date) 1000))))
+    (.write packer ^Number (.intValue (/ (.getTime date) 1000)))))
