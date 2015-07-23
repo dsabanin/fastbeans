@@ -37,6 +37,9 @@
     (when-not (print-filter-pred arg)
       arg)))
 
+(defn add-print-filter! [pred]
+  (swap! print-call-filters conj pred))
+
 (defn die
   "Construct a death reply for client to know the error information."
   [error-id & args]
