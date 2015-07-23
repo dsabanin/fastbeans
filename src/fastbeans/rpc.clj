@@ -1,7 +1,8 @@
 (ns fastbeans.rpc
-  (:use
-   fastbeans.utils
-   simplelog.use))
+  (:use fastbeans.utils
+        simplelog.use)
+  (:require tiny-bugsnag.core
+            [clj-stacktrace.repl :as stack]))
 
 (def print-call-filters (atom #{}))
 
@@ -50,6 +51,14 @@
                                            (map print-filter)
                                            (map str)))))
 
+(defn notify-bugsnag [exc f-str args signature]
+  (tiny-bugsnag.core/notify :context (str "RPC call (" f-str ")")
+                            :exception exc
+                            :data {"Arguments" (merge (if (map? args)
+                                                        args
+                                                        {"Vector" (prn-str args)})
+                                                      {"Signature" signature})}))
+
 (defn dispatch
   "Dispatch incoming deserialized call and return the signature and result."
   [[[signature [f-str & args :as whole]]]]
@@ -64,6 +73,7 @@
       (die :failed-to-resolve f-str))
     (catch clojure.lang.ArityException e
       (print-exception e)
+      (notify-bugsnag e f-str args signature)
       (die :wrong-arguments-exception (prn-call f-str args)))
     (catch Exception e
       (print-exception e)

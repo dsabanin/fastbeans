@@ -1,4 +1,4 @@
-(defproject fastbeans "1.2.8"
+(defproject fastbeans "1.3.9"
   :description "Clojure to Ruby RPC"
   :url "http://beanstalkapp.com"
   :license {:name "Eclipse Public License"
@@ -10,5 +10,6 @@
                  [io.netty/netty "3.6.3.Final"]
                  [simplelog "1.0.13"]
                  [slingshot "0.10.3"]
-                 [org.apache.commons/commons-io "1.3.2"]]
+                 [org.apache.commons/commons-io "1.3.2"]
+                 [tiny-bugsnag "0.1.3"]]
   :aot [fastbeans.handlers])
