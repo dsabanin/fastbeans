@@ -19,3 +19,6 @@ ruby-bench/cli.rb
 .project
 .classpath
 config.clj
+.idea/
+*.iml
+.nrepl-port
