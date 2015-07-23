@@ -1,19 +1,16 @@
 (ns fastbeans.core
-  (:require
-    [fastbeans.handlers :as handler])
-  (:import
-     [java.net InetSocketAddress]
-     [java.util.concurrent Executors]
-     [org.jboss.netty.bootstrap ServerBootstrap]
-     [org.jboss.netty.channel AdaptiveReceiveBufferSizePredictorFactory]
-     [org.jboss.netty.channel.socket.nio NioServerSocketChannelFactory]))
+  (:require [fastbeans.handlers :as handler])
+  (:import [java.net InetSocketAddress]
+           [java.util.concurrent Executors]
+           [org.jboss.netty.bootstrap ServerBootstrap]
+           [org.jboss.netty.channel AdaptiveReceiveBufferSizePredictorFactory]
+           [org.jboss.netty.channel.socket.nio NioServerSocketChannelFactory]))
 
-(defn channel-factory
-  []
+(defn channel-factory []
   (NioServerSocketChannelFactory. (Executors/newCachedThreadPool)
                                   (Executors/newCachedThreadPool)))
-(defn buffer-size-predictor
-  [min avg max]
+
+(defn buffer-size-predictor [min avg max]
   (AdaptiveReceiveBufferSizePredictorFactory. min avg max))
 
 (defn start
