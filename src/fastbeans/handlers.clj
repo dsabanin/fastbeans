@@ -81,8 +81,8 @@
     (error "Exception caught:" throwable)
     (print-exception throwable)
     (cond
-     (= (.getClass throwable) java.io.IOException) (.close channel)
-     (not= (.getClass throwable) ClosedChannelException) (write-death-frame channel throwable))))
+      (= (.getClass throwable) java.io.IOException) (.close channel)
+      (not= (.getClass throwable) ClosedChannelException) (write-death-frame channel throwable))))
 
 (defn -channelClosed
   [this ctx ^ChannelStateEvent e]

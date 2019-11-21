@@ -25,9 +25,9 @@
 (defn print-filter-pred
   [x]
   (some (fn [f] (try
-                 (f x)
-                 (catch Exception e
-                   false))) @print-call-filters))
+                  (f x)
+                  (catch Exception e
+                    false))) @print-call-filters))
 
 (defn print-filter
   [arg]
@@ -52,8 +52,8 @@
   "Print call information."
   [f args]
   (str "(" f " " (clojure.string/join " " (->> args
-                                           (map print-filter)
-                                           (map str))) ")"))
+                                               (map print-filter)
+                                               (map str))) ")"))
 
 (defn notify-bugsnag [exc f-str args signature]
   (tiny-bugsnag.core/notify :context (str "RPC call (" f-str ")")
