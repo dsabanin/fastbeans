@@ -6,7 +6,7 @@
   :author "Dmitry Sabanin <sdmitry@gmail.com>"
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [aleph "0.3.0-beta16" :exclusions [io.netty/netty]]
-                 [clj-msgpack "0.2.0"]
+                 [clojure-msgpack "1.2.1"]
                  [io.netty/netty "3.6.3.Final"]
                  [simplelog "1.0.13"]
                  [slingshot "0.10.3"]

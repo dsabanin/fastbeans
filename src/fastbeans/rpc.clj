@@ -77,7 +77,7 @@
 
 (defn dispatch
   "Dispatch incoming deserialized call and return the signature and result."
-  [[[signature [f-str & args :as whole]]]]
+  [[signature [f-str & args :as whole]]]
   (try
     (if-let [f (cached-auto-resolve f-str)]
       (benchmark f-str
