@@ -13,4 +13,4 @@
                  [org.apache.commons/commons-io "1.3.2"]
                  [tiny-bugsnag "0.1.3"]
                  [org.apache.commons/commons-lang3 "3.4"]]
-  :aot [fastbeans.handlers])
+  :aot :all)
