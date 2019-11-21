@@ -1,4 +1,4 @@
-(defproject fastbeans "1.4.0-final6"
+(defproject fastbeans "1.5.0"
   :description "Clojure to Ruby RPC"
   :url "http://beanstalkapp.com"
   :license {:name "Eclipse Public License"
